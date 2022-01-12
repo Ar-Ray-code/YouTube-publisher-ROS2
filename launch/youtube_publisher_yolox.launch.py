@@ -6,7 +6,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from youtube_publisher.youtube_pub import youtube_publisher
 
 def generate_launch_description():
-    # yolox_ros_share_dir = get_package_share_directory('yolox_ros_py')
+    yolox_ros_share_dir = get_package_share_directory('yolox_ros_py')
     youtube_publisher_share_dir = get_package_share_directory('youtube_publisher')
 
     youtube = launch_ros.actions.Node(
@@ -23,26 +23,29 @@ def generate_launch_description():
         ],
     )
 
-    # yolox_ros = launch_ros.actions.Node(
-    #     package='yolox_ros_py', executable='yolox_ros',
-    #     parameters=[
-    #         {'image_size/width': 640},
-    #         {'image_size/height': 480},
-    #         {'yolo_type' : 'yolox-l'},
-    #         {'fuse' : False},
-    #         {'trt' : False},
-    #         {'rank' : 0},
-    #         {'ckpt_file' : yolox_ros_share_dir+'/yolox_l.pth'},
-    #         {'conf' : 0.3},
-    #         {'nmsthre' : 0.65},
-    #         {'img_size' : 640},
-    #     ],
-    # )
+    yolox_ros = launch_ros.actions.Node(
+        package='yolox_ros_py', executable='yolox_ros',
+        parameters=[
+            {"image_size/width": 640},
+            {"image_size/height": 480},
+            {"yolo_type" : 'yolox-s'},
+            {"device" : 'cpu'},
+            {"fp16" : True},
+            {"fuse" : False},
+            {"legacy" : False},
+            {"trt" : False},
+            {"ckpt" : yolox_ros_share_dir+"/yolox_s.pth"},
+            {"conf" : 0.3},
+            {"threshold" : 0.65},
+            {"resize" : 640},
+        ],
+    )
 
     rqt_graph = launch_ros.actions.Node(
         package='rqt_graph', executable='rqt_graph',
     )
 
     return launch.LaunchDescription([
-        youtube
+        youtube,
+        yolox_ros,
     ])

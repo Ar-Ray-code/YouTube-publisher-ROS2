@@ -23,6 +23,7 @@ class youtube_publisher(Node):
         self.declare_parameter('using_youtube_dl', True)
         self.declare_parameter('clear_cache_force', False)
         self.declare_parameter('cache_file_name', 'data')
+        self.declare_parameter('imshow_is_show', True)
         self.declare_parameter('width', 720)
         self.declare_parameter('height', 480)
 
@@ -35,6 +36,7 @@ class youtube_publisher(Node):
 
         self.width = self.get_parameter('width').value
         self.height = self.get_parameter('height').value
+        self.imshow_is_show = self.get_parameter('imshow_is_show').value
         
         ydl_opts = {}
 
@@ -42,8 +44,8 @@ class youtube_publisher(Node):
             os.system('rm -rf ' + cache_path)
             self.create_folder_and_cd(cache_path)
         
-        if os.path.exists(cache_path + 'urls.txt'):
-            with open(cache_path + 'urls.txt', 'r') as f:
+        if os.path.exists(cache_path + '/url.txt'):
+            with open(cache_path + '/url.txt', 'r') as f:
                 url = f.readline()
         
                 if url == video_url:
@@ -70,7 +72,7 @@ class youtube_publisher(Node):
             os.system("rm -rf " + cache_path + "/" + cache_file_name + ".mkv")
         
         # Open Video file ===============================================
-        self.cap = cv2.VideoCapture(cache_path+"/"+cache_file_name+".avi")
+        self.cap = cv2.VideoCapture(cache_path + "/" + cache_file_name + ".avi")
         fps = self.cap.get(cv2.CAP_PROP_FPS)
         
         # publisher
@@ -87,12 +89,21 @@ class youtube_publisher(Node):
             try:
                 resized = cv2.resize(frame, (self.width, self.height))
                 msg = self.bridge.cv2_to_imgmsg(resized, encoding="bgr8")
+                msg.header.frame_id = "camera"
                 self.publisher.publish(msg)
                 # cap open
-                cv2.imshow('frame', resized)
-                cv2.waitKey(1)
+                if self.imshow_is_show:
+                    cv2.imshow('frame', resized)
+                    cv2.waitKey(1)
+                else:
+                    pass
             except CvBridgeError as e:
                 print(e)
+        else:
+            self.timer.cancel()
+            self.cap.release()
+            cv2.destroyAllWindows()
+            self.destroy_node()
 
     def create_folder_and_cd(self, path):
         os.makedirs(path, exist_ok=True)
