@@ -17,15 +17,16 @@ class youtube_publisher(Node):
     def __init__(self):
         super().__init__('youtube_publisher')
         # param
-        self.declare_parameter('topic_name', 'image')
+        self.declare_parameter('topic_name', 'image_raw')
         self.declare_parameter('cache_path', '~/cache/youtube_publisher')
-        self.declare_parameter('video_url', 'https://www.youtube.com/watch?v=Cf7VdXwjUIE')
+        self.declare_parameter('video_url', 'https://youtu.be/CFLOiR2EbKM')
         self.declare_parameter('using_youtube_dl', True)
         self.declare_parameter('clear_cache_force', False)
         self.declare_parameter('cache_file_name', 'data')
-        self.declare_parameter('imshow_is_show', True)
+        self.declare_parameter('imshow_is_show', False)
         self.declare_parameter('width', 720)
         self.declare_parameter('height', 480)
+        self.declare_parameter('speed', 1.0)
 
         topic_name = self.get_parameter('topic_name').value
         cache_path = self.get_parameter('cache_path').value.replace('~', os.environ['HOME'])
@@ -36,6 +37,7 @@ class youtube_publisher(Node):
 
         self.width = self.get_parameter('width').value
         self.height = self.get_parameter('height').value
+        speed = self.get_parameter('speed').value
         self.imshow_is_show = self.get_parameter('imshow_is_show').value
         
         ydl_opts = {}
@@ -80,7 +82,7 @@ class youtube_publisher(Node):
         self.bridge = CvBridge()
 
         # timer
-        self.timer_period = 1.0 / fps/2
+        self.timer_period = 1.0 / fps / speed
         self.timer = self.create_timer(self.timer_period, self.publish_video)
 
     def publish_video(self):
