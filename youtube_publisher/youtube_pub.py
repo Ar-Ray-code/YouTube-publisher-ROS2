@@ -80,7 +80,7 @@ class youtube_publisher(Node):
         self.bridge = CvBridge()
 
         # timer
-        self.timer_period = 1.0 / fps
+        self.timer_period = 1.0 / fps/2
         self.timer = self.create_timer(self.timer_period, self.publish_video)
 
     def publish_video(self):

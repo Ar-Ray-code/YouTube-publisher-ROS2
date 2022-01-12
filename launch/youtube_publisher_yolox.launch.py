@@ -19,17 +19,17 @@ def generate_launch_description():
             {'clear_cache_force' : False},
             {'width' : 720},
             {'height' : 480},
-            {'imshow_is_show' : True}
+            {'imshow_is_show' : False}
         ],
     )
 
     yolox_ros = launch_ros.actions.Node(
         package='yolox_ros_py', executable='yolox_ros',
         parameters=[
-            {"image_size/width": 640},
+            {"image_size/width": 720},
             {"image_size/height": 480},
             {"yolo_type" : 'yolox-s'},
-            {"device" : 'cpu'},
+            {"device" : 'gpu'},
             {"fp16" : True},
             {"fuse" : False},
             {"legacy" : False},
