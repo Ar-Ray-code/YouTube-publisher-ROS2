@@ -4,7 +4,7 @@ Publish sensor_msgs/Image by "YouTube" :hugs: :hugs: :hugs: !
 
 You don't have to use webcamera or your video to check demos.
 
-![youtube-pub-1080p](images_for_readme/youtube-pub-1080p.png)
+![youtube-pub](images_for_readme/youtube-pub.png)
 
 
 
@@ -66,14 +66,14 @@ colcon build --symlink-install
 ros2 launch youtube_publisher youtube_publisher_yolox.launch.py
 ```
 
-
+![youtube-yolox](images_for_readme/youtube-yolox.png)
 
 ## Parameter
 
-Look the launch.py file !
+Look the [launch.py](https://github.com/Ar-Ray-code/YouTube-publisher-ROS2/blob/main/launch/youtube_pub.launch.py) file !
 
 ```python
-youtube = launch_ros.actions.Node(
+	youtube = launch_ros.actions.Node(
         package='youtube_publisher', executable='youtube_pub',
         parameters=[
             {'topic_name': '/image_raw'},
@@ -104,3 +104,8 @@ youtube = launch_ros.actions.Node(
 
 
 
+## About author
+
+- author : [Ar-Ray](https://github.com/Ar-Ray-code)
+- [Twitter](https://twitter.com/Ray255Ar)
+- [はてなブログ](https://ar-ray.hatenablog.com/)
